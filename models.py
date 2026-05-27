@@ -170,12 +170,12 @@ class Board:
             )
 
     def setup_co_up(self) -> None:
-        """Sets up the board for Cờ Úp (Blind/Mystery Xiangqi) - CHAOS MODE.
+        """Sets up the board for Cờ Úp (Blind/Mystery Xiangqi).
         
         Generals start face-up in their standard positions.
         All other 15 pieces of each color are shuffled and placed face-down
-        in random positions across their 45-square home territory.
-        Both real and pseudo types are completely randomized.
+        in their standard starting positions, receiving their pseudo_type
+        from their standard position.
         """
         self.grid.clear()
         self.is_co_up = True
@@ -190,41 +190,42 @@ class Board:
             PieceType.SOLDIER, PieceType.SOLDIER, PieceType.SOLDIER, PieceType.SOLDIER, PieceType.SOLDIER
         ]
         
-        # 1. Place Generals
-        self.grid[Position(4, 0)] = Piece("red_general_4_0", Color.RED, PieceType.GENERAL, False, PieceType.GENERAL)
-        self.grid[Position(4, 9)] = Piece("black_general_4_9", Color.BLACK, PieceType.GENERAL, False, PieceType.GENERAL)
+        red_pool = list(base_pool)
+        random.shuffle(red_pool)
         
-        # 2. Get 15 random spots for Red (rows 0-4)
-        red_spots = [Position(c, r) for r in range(5) for c in range(9) if not (c == 4 and r == 0)]
-        random.shuffle(red_spots)
+        black_pool = list(base_pool)
+        random.shuffle(black_pool)
         
-        # 3. Get 15 random spots for Black (rows 5-9)
-        black_spots = [Position(c, r) for r in range(5, 10) for c in range(9) if not (c == 4 and r == 9)]
-        random.shuffle(black_spots)
+        red_idx = 0
+        black_idx = 0
         
-        # 4. Shuffle real and pseudo types
-        red_real = list(base_pool); random.shuffle(red_real)
-        red_pseudo = list(base_pool); random.shuffle(red_pseudo)
-        
-        black_real = list(base_pool); random.shuffle(black_real)
-        black_pseudo = list(base_pool); random.shuffle(black_pseudo)
-        
-        # 5. Place pieces
-        for i in range(15):
-            r_pos = red_spots[i]
-            self.grid[r_pos] = Piece(
-                piece_id=f"red_dark_{r_pos.col}_{r_pos.row}",
-                color=Color.RED,
-                real_type=red_real[i],
-                is_face_down=True,
-                pseudo_type=red_pseudo[i]
-            )
+        for (col, row), pseudo_type in STARTING_POSITIONS.items():
+            pos = Position(col, row)
+            color = Color.RED if row <= 4 else Color.BLACK
             
-            b_pos = black_spots[i]
-            self.grid[b_pos] = Piece(
-                piece_id=f"black_dark_{b_pos.col}_{b_pos.row}",
-                color=Color.BLACK,
-                real_type=black_real[i],
-                is_face_down=True,
-                pseudo_type=black_pseudo[i]
-            )
+            if pseudo_type == PieceType.GENERAL:
+                # General is always face-up and standard
+                piece_id = f"{color.value}_general_{col}_{row}"
+                self.grid[pos] = Piece(
+                    piece_id=piece_id,
+                    color=color,
+                    real_type=PieceType.GENERAL,
+                    is_face_down=False,
+                    pseudo_type=PieceType.GENERAL
+                )
+            else:
+                if color == Color.RED:
+                    real_type = red_pool[red_idx]
+                    red_idx += 1
+                else:
+                    real_type = black_pool[black_idx]
+                    black_idx += 1
+                
+                piece_id = f"{color.value}_dark_{col}_{row}"
+                self.grid[pos] = Piece(
+                    piece_id=piece_id,
+                    color=color,
+                    real_type=real_type,
+                    is_face_down=True,
+                    pseudo_type=pseudo_type
+                )
