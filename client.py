@@ -467,6 +467,7 @@ class PygameApp:
         # Animations
         self.current_animation: Optional[PieceAnimation] = None
         self.move_history: List[dict] = []  # supports local undo
+        self.shuffle_timer = 0
 
     def grid_to_pixel(self, col: int, row: int) -> Tuple[int, int]:
         """Converts board index to screen pixels."""
@@ -676,6 +677,8 @@ class PygameApp:
         if BOARD_LEFT <= x < BOARD_LEFT + 9 * GRID_CELL_SIZE and BOARD_TOP <= y < BOARD_TOP + 10 * GRID_CELL_SIZE:
             if self.game_state != "playing" or self.player_color != self.current_turn:
                 return
+            if getattr(self, 'shuffle_timer', 0) > 0:
+                return # Block interactions while shuffling
                 
             pos = self.pixel_to_grid(x, y)
             if not pos:
@@ -804,6 +807,7 @@ class PygameApp:
                     self.sub_mode = "co_up"
                     self.local_board.setup_co_up()
                     self.status_message = "Cờ Úp Mode initialized."
+                    self.shuffle_timer = 60
 
             # --- AI difficulty (PvE only) ---
             # EASY: (PX+80,150,68,28)  MEDIUM:(PX+154,150,82,28)  HARD:(PX+242,150,72,28)
@@ -871,6 +875,7 @@ class PygameApp:
                 if self.game_mode == "PvE":
                     if self.sub_mode == "co_up":
                         self.local_board.setup_co_up()
+                        self.shuffle_timer = 60
                     else:
                         self.local_board.setup_classic()
                     self.current_turn = Color.RED
@@ -1152,6 +1157,25 @@ class PygameApp:
                 if piece.get_current_type() == PieceType.GENERAL:
                     is_checked = self.validator.is_in_check(self.local_board, piece.color)
                     
+                # Apply shuffle animation offset if active and piece is face down
+                if getattr(self, 'shuffle_timer', 0) > 0 and piece.is_face_down:
+                    center_col = 4
+                    center_row = 2.5 if piece.color == Color.RED else 7.5
+                    cx = BOARD_LEFT + center_col * GRID_CELL_SIZE
+                    cy = BOARD_TOP + int(center_row * GRID_CELL_SIZE)
+                    
+                    if self.shuffle_timer > 40: # slide to center
+                        t = (60 - self.shuffle_timer) / 20.0
+                        px_x = int(px_x + (cx - px_x) * t)
+                        px_y = int(px_y + (cy - px_y) * t)
+                    elif self.shuffle_timer > 20: # jiggle (mix)
+                        px_x = int(cx + random.randint(-40, 40))
+                        px_y = int(cy + random.randint(-40, 40))
+                    else: # slide back to spot
+                        t = (20 - self.shuffle_timer) / 20.0
+                        px_x = int(cx + (px_x - cx) * t)
+                        px_y = int(cy + (px_y - cy) * t)
+
                 self.graphics.draw_3d_piece(
                     px_x, px_y, piece.color.value, piece.get_current_type().value, 
                     piece.is_face_down, is_selected, is_checked
@@ -1316,6 +1340,12 @@ class PygameApp:
             
             # Render frame
             pygame.display.flip()
+            
+            if getattr(self, 'shuffle_timer', 0) > 0:
+                self.shuffle_timer -= 1
+                if self.shuffle_timer > 20 and self.shuffle_timer % 4 == 0:
+                    play_sound(80 + random.randint(0, 40), 40, 0.4)
+                    
             self.clock.tick(60)
 
 if __name__ == "__main__":

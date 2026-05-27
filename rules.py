@@ -109,10 +109,11 @@ class MoveValidator:
             return False
             
         # Palace restriction:
-        # In Classic mode OR if the piece is still face-down, it must stay in the Palace.
+        # In Classic mode, it must stay in the Palace.
         is_co_up = getattr(board, "is_co_up", False)
-        if not is_co_up or piece.is_face_down:
+        if not is_co_up:
             return to_pos.is_in_palace(piece.color)
+            
             
         # In Cờ Úp, once revealed, the Advisor is allowed to cross the river and leave the Palace.
         return True
