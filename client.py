@@ -154,6 +154,10 @@ class GraphicsEngine:
         self.font_calligraphy      = self.get_piece_font(36)
         self.font_calligraphy_dark = self.get_piece_font(34)
         self.font_river            = self.get_piece_font(27)  # "漢楚爭雄" trên sông
+        
+        # Cache for procedural wood background
+        self.wood_surface = None
+        self.wood_rect = None
 
     # ------------------------------------------------------------------
     # Font loader: Menu / UI  (Vietnamese-first, broad Unicode)
@@ -253,23 +257,32 @@ class GraphicsEngine:
 
     def draw_wood_background(self, rect: pygame.Rect):
         """Generates a procedural, premium wood grain texture dynamically."""
-        # Base wood color fill
-        pygame.draw.rect(self.screen, COLOR_WOOD_DARK, rect)
-        
-        # Procedural vertical grain fibers
-        random.seed(42)  # Maintain stable grain texture between frames
-        for x in range(rect.left, rect.right, 3):
-            # Draw subtle vertical lines of varying brown shades
-            shade = random.randint(-15, 15)
-            r = max(0, min(255, COLOR_WOOD_DARK[0] + shade))
-            g = max(0, min(255, COLOR_WOOD_DARK[1] + shade - 5))
-            b = max(0, min(255, COLOR_WOOD_DARK[2] + shade - 10))
+        if self.wood_surface is None or self.wood_rect != rect:
+            self.wood_surface = pygame.Surface((rect.width, rect.height))
+            self.wood_rect = rect
             
-            # Subtle vertical alpha line
-            pygame.draw.line(self.screen, (r, g, b), (x, rect.top), (x, rect.bottom), 1)
+            # Base wood color fill
+            pygame.draw.rect(self.wood_surface, COLOR_WOOD_DARK, self.wood_surface.get_rect())
             
-        # Draw soft bevel / inner frame
-        pygame.draw.rect(self.screen, COLOR_BOARD_LINE, rect, 4)
+            # Procedural vertical grain fibers
+            state = random.getstate()
+            random.seed(42)  # Maintain stable grain texture
+            
+            for x in range(0, rect.width, 3):
+                # Draw subtle vertical lines of varying brown shades
+                shade = random.randint(-15, 15)
+                r = max(0, min(255, COLOR_WOOD_DARK[0] + shade))
+                g = max(0, min(255, COLOR_WOOD_DARK[1] + shade - 5))
+                b = max(0, min(255, COLOR_WOOD_DARK[2] + shade - 10))
+                
+                # Subtle vertical alpha line
+                pygame.draw.line(self.wood_surface, (r, g, b), (x, 0), (x, rect.height), 1)
+                
+            # Draw soft bevel / inner frame
+            pygame.draw.rect(self.wood_surface, COLOR_BOARD_LINE, self.wood_surface.get_rect(), 4)
+            random.setstate(state)
+            
+        self.screen.blit(self.wood_surface, (rect.left, rect.top))
 
     def draw_board(self, board_rect: pygame.Rect):
         """Draws a premium wooden Xiangqi board layout."""
