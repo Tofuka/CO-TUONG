@@ -56,6 +56,150 @@ CHARACTERS = {
 }
 
 # ---------------------------------------------------------------------------
+# Bilingual Text Dictionary
+# ---------------------------------------------------------------------------
+LANG = {
+    "vi": {
+        # Menu
+        "title":            "CỜ TƯỚNG & CỜ ÚP",
+        "btn_pve":          "[*]  ĐẤU VỚI MÁY  (PvE)",
+        "btn_pvp":          "[~]  ĐẤU MẠNG  (PvP)",
+        "btn_rules":        "[?]  HƯỚNG DẪN CHƠI",
+        "btn_exit":         "[X]  THOÁT GAME",
+        # Rules page
+        "rules_title":      "HƯỚNG DẪN LUẬT CHƠI",
+        "rules_back":       "QUAY LẠI MENU CHÍNH",
+        "rules_lines": [
+            "1. CỜ TƯỚNG TRUYỀN THỐNG:",
+            "   - Xe: Đi và ăn ngang dọc không giới hạn khoảng cách, miễn là không bị chắn.",
+            "   - Pháo: Đi ngang dọc; khi ăn quân bắt buộc phải nhảy qua đúng 1 quân cản.",
+            "   - Mã: Di chuyển hình chữ L (tiến 1 chéo 1). Bị cản chân nếu có quân liền kề.",
+            "   - Tượng: Đi chéo 2 ô; bị cản mắt nếu có quân ở giữa. Không được qua sông.",
+            "   - Sĩ: Đi chéo 1 ô bên trong phạm vi Cung (Cung rộng 3x3 ô ở đáy).",
+            "   - Tướng: Đi ngang hoặc dọc 1 ô bên trong phạm vi Cung.",
+            "   - Tốt: Đi thẳng 1 ô. Sau khi qua sông được đi thẳng hoặc ngang 1 ô.",
+            "   - Lộ Mặt Tướng: Hai Tướng không được đối mặt trực tiếp trên cùng một cột.",
+            "",
+            "2. CHẾ ĐỘ CHƠI CỜ ÚP (MYSTERY CHESS):",
+            "   - Chỉ có Tướng đặt ngửa. 15 quân còn lại bị úp mặt, xáo trộn ngẫu nhiên.",
+            "   - Nước đầu tiên của quân úp theo luật vị trí giả định đang đứng.",
+            "   - Sau nước đầu tiên, quân úp lật ngửa lộ danh tính thật.",
+            "   - Từ nước thứ hai trở đi, di chuyển theo luật thật của chính nó.",
+            "   - Luật đặc biệt: Sĩ và Tượng Cờ Úp sau khi ngửa ĐƯỢC PHÉP QUA SÔNG!"
+        ],
+        # Sidebar
+        "sidebar_title":    "CỜ TƯỚNG & CỜ ÚP",
+        "btn_menu":         "MENU",
+        "btn_vs_ai":        "Đấu với Máy",
+        "btn_online":       "Đấu Mạng",
+        "label_mode":       "Chế Độ:",
+        "btn_classic":      "Truyền Thống",
+        "btn_co_up":        "Cờ Úp",
+        "label_diff":       "Độ Khó:",
+        "btn_connect":      "[>>]  KẾT NỐI SERVER",
+        "placeholder_room": "MÃ PHÒNG",
+        "btn_create_room":  "TẠO PHÒNG",
+        "btn_join_room":    "VÀO PHÒNG THEO MÃ CODE",
+        "label_chat":       "Kênh Trò Chuyện:",
+        "placeholder_chat": "NHẬP TIN NHẮN...",
+        "btn_undo":         "<<  QUAY LẠI",
+        "btn_reset":        "[o]  ĐẦU HÀNG / RESET",
+        # Game over
+        "win_title":        "*** THẮNG ***",
+        "lose_title":       "--- THUA ---",
+        "win_label":        "BẠN ĐÃ THẮNG!",
+        "lose_label":       "BẠN ĐÃ THUA!",
+        "win_sub":          "{color} đã chiếu hết!",
+        "lose_sub":         "{color} đã bị chiếu hết!",
+        "rematch_btn":      ">> ĐẤU LẠI <<",
+        "color_red":        "ĐỎ",
+        "color_black":      "ĐEN",
+        # Status messages
+        "status_ready":     "Sẵn sàng! (Bạn: ĐỎ)",
+        "status_offline":   "Server ngoại tuyến. Kết nối để bắt đầu.",
+        "status_ai_think":  "Máy đang suy nghĩ...",
+        "status_your_turn": "Lượt của bạn.",
+        "status_illegal":   "Nước đi không hợp lệ.",
+        "status_new_match": "Ván mới bắt đầu! (Bạn: ĐỎ)",
+        "status_undo":      "Đã hoàn tác.",
+        "status_reset":     "Đã đặt lại ván cờ.",
+        "status_check_b":   "CẢNH BÁO: TƯỚNG ĐEN bị chiếu!",
+        "status_check_r":   "CẢNH BÁO: TƯỚNG ĐỎ bị chiếu!",
+        "status_mate_r":    "Chiếu hết! ĐỎ thắng!",
+        "status_mate_b":    "Chiếu hết! MÁY thắng!",
+    },
+    "en": {
+        # Menu
+        "title":            "XIANGQI & MYSTERY CHESS",
+        "btn_pve":          "[*]  PLAY VS AI  (PvE)",
+        "btn_pvp":          "[~]  PLAY ONLINE  (PvP)",
+        "btn_rules":        "[?]  HOW TO PLAY",
+        "btn_exit":         "[X]  EXIT GAME",
+        # Rules page
+        "rules_title":      "GAME RULES",
+        "rules_back":       "BACK TO MAIN MENU",
+        "rules_lines": [
+            "1. CLASSIC XIANGQI:",
+            "   - Chariot (Rook): Moves any number of squares horizontally or vertically.",
+            "   - Cannon: Moves like Chariot; captures by jumping over exactly 1 piece.",
+            "   - Horse: Moves in an L-shape (1 ortho + 1 diagonal). Blocked by adjacent piece.",
+            "   - Elephant: Moves 2 squares diagonally; blocked if middle square is occupied.",
+            "   - Advisor: Moves 1 square diagonally inside the palace (3x3 area).",
+            "   - General (King): Moves 1 square orthogonally inside the palace.",
+            "   - Soldier (Pawn): Moves 1 square forward; after river can also move sideways.",
+            "   - Flying General: Two Generals cannot face each other on same file with no piece between.",
+            "",
+            "2. MYSTERY CHESS (CO UP) MODE:",
+            "   - Only the General is placed face-up. The other 15 pieces are shuffled face-down.",
+            "   - First move of a face-down piece follows the rule of its assumed position.",
+            "   - After the first move the piece is flipped face-up revealing its true identity.",
+            "   - From the second move onward, the piece follows its own real movement rules.",
+            "   - Special rule: Advisor & Elephant in Co Up mode may cross the river once revealed!"
+        ],
+        # Sidebar
+        "sidebar_title":    "XIANGQI & MYSTERY CHESS",
+        "btn_menu":         "MENU",
+        "btn_vs_ai":        "VS Computer",
+        "btn_online":       "Online PvP",
+        "label_mode":       "Mode:",
+        "btn_classic":      "Classic",
+        "btn_co_up":        "Mystery",
+        "label_diff":       "Difficulty:",
+        "btn_connect":      "[>>]  CONNECT TO SERVER",
+        "placeholder_room": "ROOM CODE",
+        "btn_create_room":  "CREATE ROOM",
+        "btn_join_room":    "JOIN ROOM BY CODE",
+        "label_chat":       "Chat Channel:",
+        "placeholder_chat": "TYPE A MESSAGE...",
+        "btn_undo":         "<<  UNDO",
+        "btn_reset":        "[o]  RESIGN / RESET",
+        # Game over
+        "win_title":        "*** YOU WIN ***",
+        "lose_title":       "--- YOU LOSE ---",
+        "win_label":        "YOU WON!",
+        "lose_label":       "YOU LOST!",
+        "win_sub":          "{color} has been checkmated!",
+        "lose_sub":         "{color} has been checkmated!",
+        "rematch_btn":      ">> REMATCH <<",
+        "color_red":        "RED",
+        "color_black":      "BLACK",
+        # Status messages
+        "status_ready":     "Game Ready! (You: RED)",
+        "status_offline":   "Server offline. Connect to start.",
+        "status_ai_think":  "AI is thinking...",
+        "status_your_turn": "Your turn.",
+        "status_illegal":   "Illegal move.",
+        "status_new_match": "New match started! (You: RED)",
+        "status_undo":      "Undo complete.",
+        "status_reset":     "Game reset.",
+        "status_check_b":   "WARNING: BLACK General is in check!",
+        "status_check_r":   "WARNING: RED General is in check!",
+        "status_mate_r":    "Checkmate! RED wins!",
+        "status_mate_b":    "Checkmate! AI wins!",
+    }
+}
+
+# ---------------------------------------------------------------------------
 # Native Procedural Sound Synthesis
 # ---------------------------------------------------------------------------
 
@@ -475,7 +619,8 @@ class PygameApp:
         self.input_room_id = ""
         self.input_chat = ""
         self.active_input = "room"        # "room" or "chat"
-        self.status_message = "Local Game Ready (You: RED)"
+        self.lang = "vi"                   # "vi" = Tiếng Việt, "en" = English
+        self.status_message = LANG["vi"]["status_ready"]
         
         # Animations
         self.current_animation: Optional[PieceAnimation] = None
@@ -640,8 +785,18 @@ class PygameApp:
     def handle_click(self, x: int, y: int):
         """Processes selection clicks on the board and menu buttons."""
         if self.current_screen == "menu":
-            # 1. PvE: (320, 280, 360, 50)
-            if 320 <= x <= 680 and 280 <= y <= 330:
+            T = LANG[self.lang]
+            # Language toggle buttons: VI (760,68,40,28)  EN (806,68,40,28)
+            if 760 <= x <= 800 and 68 <= y <= 96:
+                self.lang = "vi"
+                play_sound(800, 40, 0.3)
+                return
+            elif 806 <= x <= 846 and 68 <= y <= 96:
+                self.lang = "en"
+                play_sound(800, 40, 0.3)
+                return
+            # 1. PvE: Rect(310, 268, 380, 54)
+            if 310 <= x <= 690 and 268 <= y <= 322:
                 self.current_screen = "game"
                 self.game_mode = "PvE"
                 self.sub_mode = "classic"
@@ -649,22 +804,22 @@ class PygameApp:
                 self.current_turn = Color.RED
                 self.game_state = "playing"
                 self.move_history.clear()
-                self.status_message = "Local Game Ready (You: RED)"
+                self.status_message = T["status_ready"]
                 self.selected_pos = None
                 play_sound(180, 150, 0.7)
-            # 2. PvP: (320, 370, 360, 50)
-            elif 320 <= x <= 680 and 370 <= y <= 420:
+            # 2. PvP: Rect(310, 355, 380, 54)
+            elif 310 <= x <= 690 and 355 <= y <= 409:
                 self.current_screen = "game"
                 self.game_mode = "PvP"
-                self.status_message = "Offline Server. Connect to Start."
+                self.status_message = T["status_offline"]
                 self.selected_pos = None
                 play_sound(180, 150, 0.7)
-            # 3. Rules: (320, 460, 360, 50)
-            elif 320 <= x <= 680 and 460 <= y <= 510:
+            # 3. Rules: Rect(310, 442, 380, 54)
+            elif 310 <= x <= 690 and 442 <= y <= 496:
                 self.current_screen = "rules"
                 play_sound(180, 150, 0.7)
-            # 4. Exit: (320, 550, 360, 50)
-            elif 320 <= x <= 680 and 550 <= y <= 600:
+            # 4. Exit: Rect(310, 529, 380, 54)
+            elif 310 <= x <= 690 and 529 <= y <= 583:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
                 play_sound(180, 150, 0.7)
             return
@@ -684,6 +839,10 @@ class PygameApp:
                 if self.net_thread:
                     self.net_thread.running = False
                     self.net_thread = None
+                return
+
+            # Game-over overlay rematch button takes priority
+            if self._handle_rematch_click(x, y):
                 return
 
         # 1. Click on Board (9 columns x 10 rows in Xiangqi)
@@ -900,6 +1059,8 @@ class PygameApp:
 
     def draw_start_menu(self):
         """Draws a premium Eastern start menu with glowing hover interactions."""
+        T = LANG[self.lang]  # shortcut to current language strings
+
         # 1. Base clean dark backdrop
         self.screen.fill(COLOR_BACKGROUND)
         
@@ -914,81 +1075,73 @@ class PygameApp:
         bg_char_rect = bg_char_large.get_rect(center=(500, 375))
         self.screen.blit(bg_char_large, bg_char_rect)
         
-        # 3. Tiêu đề lớn – dùng font_menu_title (render trực tiếp, không scale → sắc nét)
-        lbl_title = self.graphics.font_menu_title.render("CỜ TƯỚNG & CỜ ÚP", True, COLOR_GOLD)
+        # 3. Title
+        lbl_title = self.graphics.font_menu_title.render(T["title"], True, COLOR_GOLD)
         title_rect = lbl_title.get_rect(center=(500, 145))
         self.screen.blit(lbl_title, title_rect)
 
-        lbl_sub = self.graphics.font_medium.render("Bản Sắc Á Đông  ·  Thư Pháp Truyền Thống", True, COLOR_TEXT_MUTED)
-        sub_rect = lbl_sub.get_rect(center=(500, 205))
-        self.screen.blit(lbl_sub, sub_rect)
-
         pygame.draw.line(self.screen, COLOR_GOLD, (250, 232), (750, 232), 2)
 
-        # 4. Nút menu – căn giữa, khoảng cách đều, text vừa vặn
+        # 4. Menu buttons
         buttons = [
-            ("⚔  ĐẤU VỚI MÁY  (PvE)", pygame.Rect(310, 268, 380, 54), "pve"),
-            ("🌐  ĐẤU MẠNG  (PvP)",    pygame.Rect(310, 355, 380, 54), "pvp"),
-            ("📖  HƯỚNG DẪN CHƠI",     pygame.Rect(310, 442, 380, 54), "rules"),
-            ("✖  THOÁT GAME",          pygame.Rect(310, 529, 380, 54), "exit"),
+            (T["btn_pve"],   pygame.Rect(310, 268, 380, 54), "pve"),
+            (T["btn_pvp"],   pygame.Rect(310, 355, 380, 54), "pvp"),
+            (T["btn_rules"], pygame.Rect(310, 442, 380, 54), "rules"),
+            (T["btn_exit"],  pygame.Rect(310, 529, 380, 54), "exit"),
         ]
 
         mx, my = pygame.mouse.get_pos()
 
         for text, rect, action in buttons:
             is_hover = rect.collidepoint(mx, my)
-            # Nền nút
             bg_color = (72, 55, 42) if is_hover else (48, 40, 35)
             pygame.draw.rect(self.screen, bg_color, rect, border_radius=10)
-            # Viền nút
             border_col = COLOR_SEL_GLOW if is_hover else COLOR_GOLD
             border_w   = 2 if is_hover else 1
             pygame.draw.rect(self.screen, border_col, rect, border_w, border_radius=10)
-            # Thanh dọc bên trái (accent)
             pygame.draw.rect(self.screen, border_col, pygame.Rect(rect.x + 6, rect.y + 8, 3, rect.height - 16), border_radius=2)
-            # Text
             txt_col = COLOR_SEL_GLOW if is_hover else COLOR_TEXT_LIGHT
             lbl = self.graphics.font_medium.render(text, True, txt_col)
             lbl_rect = lbl.get_rect(midleft=(rect.x + 20, rect.centery))
             self.screen.blit(lbl, lbl_rect)
 
+        # 5. Language toggle buttons – top-right corner of the panel
+        #    VI button: Rect(760, 68, 40, 28)   EN button: Rect(806, 68, 40, 28)
+        lang_vi_rect = pygame.Rect(760, 68, 40, 28)
+        lang_en_rect = pygame.Rect(806, 68, 40, 28)
+
+        def draw_lang_btn(rect, code, label):
+            is_active = (self.lang == code)
+            is_hov    = rect.collidepoint(mx, my)
+            bg  = (110, 78, 46) if is_active else ((62, 52, 44) if is_hov else (38, 32, 28))
+            brd = COLOR_SEL_GLOW if is_hov else (COLOR_GOLD if is_active else (70, 60, 50))
+            pygame.draw.rect(self.screen, bg,  rect, border_radius=6)
+            pygame.draw.rect(self.screen, brd, rect, 2 if is_active or is_hov else 1, border_radius=6)
+            txt_c = COLOR_SEL_GLOW if is_hov else (COLOR_GOLD if is_active else COLOR_TEXT_MUTED)
+            lbl = self.graphics.font_ui.render(label, True, txt_c)
+            self.screen.blit(lbl, lbl.get_rect(center=rect.center))
+
+        draw_lang_btn(lang_vi_rect, "vi", "VI")
+        draw_lang_btn(lang_en_rect, "en", "EN")
+
     def draw_rules_page(self):
         """Draws an elegant rules instruction scroll screen."""
+        T = LANG[self.lang]
         self.screen.fill(COLOR_BACKGROUND)
         
         panel_rect = pygame.Rect(100, 50, 800, 650)
         self.graphics.draw_wood_background(panel_rect)
         pygame.draw.rect(self.screen, COLOR_GOLD, panel_rect, 2)
         
-        lbl_title = self.graphics.font_title.render("HƯỚNG DẪN LUẬT CHƠI", True, COLOR_GOLD)
+        lbl_title = self.graphics.font_title.render(T["rules_title"], True, COLOR_GOLD)
         title_rect = lbl_title.get_rect(center=(500, 95))
         self.screen.blit(lbl_title, title_rect)
         pygame.draw.line(self.screen, COLOR_GOLD, (250, 130), (750, 130), 2)
         
-        rules_text = [
-            "1. CỜ TƯỚNG TRUYỀN THỐNG:",
-            "   - Xe: Đi và ăn ngang dọc không giới hạn khoảng cách, miễn là không bị chắn.",
-            "   - Pháo: Đi ngang dọc; khi ăn quân bắt buộc phải nhảy qua đúng 1 quân cản (gọi là Ngòi).",
-            "   - Mã: Di chuyển hình chữ L (tiến 1 chéo 1). Bị cản chân nếu có quân đứng liền kề ở hướng tiến.",
-            "   - Tượng: Đi chéo 2 ô; bị cản mắt nếu có quân ở giữa đường đi chéo. Tượng không được qua sông.",
-            "   - Sĩ: Đi chéo 1 ô bên trong phạm vi Cung (Cung rộng 3x3 ô ở đáy).",
-            "   - Tướng: Đi ngang hoặc dọc 1 ô bên trong phạm vi Cung.",
-            "   - Tốt: Đi thẳng 1 ô. Sau khi qua sông được đi thẳng hoặc đi ngang 1 ô, không được đi lùi.",
-            "   - Lộ Mặt Tướng: Hai Tướng không được đối mặt trực tiếp trên cùng một cột mà không có quân cản.",
-            "",
-            "2. CHẾ ĐỘ CHƠI CỜ ÚP (MYSTERY CHESS):",
-            "   - Chỉ có Tướng đặt ngửa ở vị trí ban đầu. 15 quân còn lại bị úp mặt, xáo trộn đặt ngẫu nhiên.",
-            "   - Nước đi đầu tiên của quân úp tuân thủ luật di chuyển của vị trí mà nó đang đứng (vị trí giả định).",
-            "   - Ngay sau khi hoàn tất nước đi đầu tiên, quân úp được lật ngửa để lộ danh tính thật.",
-            "   - Từ nước thứ hai trở đi, quân cờ di chuyển và ăn quân theo luật thật của chính nó.",
-            "   - Luật đặc biệt: Hai quân Sĩ và Tượng cờ Úp sau khi đã ngửa ĐƯỢC PHÉP QUA SÔNG tự do!"
-        ]
-        
-        for idx, line in enumerate(rules_text):
+        for idx, line in enumerate(T["rules_lines"]):
             is_header = line.startswith("1.") or line.startswith("2.")
             color = COLOR_GOLD if is_header else COLOR_TEXT_LIGHT
             font = self.graphics.font_medium if is_header else self.graphics.font_ui
-            
             lbl = font.render(line, True, color)
             self.screen.blit(lbl, (140, 160 + idx * 26))
             
@@ -999,7 +1152,7 @@ class PygameApp:
         pygame.draw.rect(self.screen, (60, 50, 45) if is_hover else (45, 38, 34), back_rect, border_radius=6)
         pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hover else COLOR_GOLD, back_rect, 2 if is_hover else 1, border_radius=6)
         
-        lbl_back = self.graphics.font_medium.render("QUAY LẠI MENU CHÍNH", True, COLOR_SEL_GLOW if is_hover else COLOR_TEXT_LIGHT)
+        lbl_back = self.graphics.font_medium.render(T["rules_back"], True, COLOR_SEL_GLOW if is_hover else COLOR_TEXT_LIGHT)
         lbl_back_rect = lbl_back.get_rect(center=back_rect.center)
         self.screen.blit(lbl_back, lbl_back_rect)
 
@@ -1212,14 +1365,15 @@ class PygameApp:
             mx, my = pygame.mouse.get_pos()
 
             # ── Header title + MENU button ──────────────────────────────
-            lbl_hdr = self.graphics.font_title.render("CỜ TƯỚNG & CỜ ÚP", True, COLOR_GOLD)
+            T = LANG[self.lang]
+            lbl_hdr = self.graphics.font_title.render(T["sidebar_title"], True, COLOR_GOLD)
             self.screen.blit(lbl_hdr, (PX, 12))
 
             btn_menu = pygame.Rect(900, 10, 72, 28)
             is_hov_m = btn_menu.collidepoint(mx, my)
             pygame.draw.rect(self.screen, (90, 55, 50) if is_hov_m else (55, 45, 40), btn_menu, border_radius=5)
             pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hov_m else COLOR_GOLD, btn_menu, 1, border_radius=5)
-            lbl_m = self.graphics.font_ui.render("MENU", True, COLOR_SEL_GLOW if is_hov_m else COLOR_TEXT_LIGHT)
+            lbl_m = self.graphics.font_ui.render(T["btn_menu"], True, COLOR_SEL_GLOW if is_hov_m else COLOR_TEXT_LIGHT)
             self.screen.blit(lbl_m, lbl_m.get_rect(center=btn_menu.center))
 
             pygame.draw.line(self.screen, (70, 60, 50), (PX, 46), (PX + PW, 46), 1)
@@ -1236,14 +1390,14 @@ class PygameApp:
                 lbl = self.graphics.font_medium.render(label, True, txt_c)
                 self.screen.blit(lbl, lbl.get_rect(center=rect.center))
 
-            draw_btn(pygame.Rect(PX,       52, 152, 36), "Đấu với Máy", self.game_mode == "PvE", True)
-            draw_btn(pygame.Rect(PX + 160, 52, 152, 36), "Đấu Mạng",   self.game_mode == "PvP", True)
+            draw_btn(pygame.Rect(PX,       52, 152, 36), T["btn_vs_ai"],  self.game_mode == "PvE", True)
+            draw_btn(pygame.Rect(PX + 160, 52, 152, 36), T["btn_online"], self.game_mode == "PvP", True)
 
             pygame.draw.line(self.screen, (70, 60, 50), (PX, 96), (PX + PW, 96), 1)
 
             # ── Sub-mode (Chế Độ) ───────────────────────────────────────
             # Label "Chế Độ:" + Classic (PX+80,108,110,28) + Cờ Úp (PX+198,108,80,28)
-            lbl_sd = self.graphics.font_ui.render("Chế Độ:", True, COLOR_TEXT_MUTED)
+            lbl_sd = self.graphics.font_ui.render(T["label_mode"], True, COLOR_TEXT_MUTED)
             self.screen.blit(lbl_sd, lbl_sd.get_rect(midleft=(PX, 122)))
 
             def draw_small_btn(rect, label, active):
@@ -1256,12 +1410,12 @@ class PygameApp:
                 lbl = self.graphics.font_ui.render(label, True, txt_c)
                 self.screen.blit(lbl, lbl.get_rect(center=rect.center))
 
-            draw_small_btn(pygame.Rect(PX + 80,  108, 110, 28), "Truyền Thống", self.sub_mode == "classic")
-            draw_small_btn(pygame.Rect(PX + 198, 108,  80, 28), "Cờ Úp",        self.sub_mode == "co_up")
+            draw_small_btn(pygame.Rect(PX + 80,  108, 110, 28), T["btn_classic"], self.sub_mode == "classic")
+            draw_small_btn(pygame.Rect(PX + 198, 108,  80, 28), T["btn_co_up"],   self.sub_mode == "co_up")
 
             # ── Difficulty (PvE only) ────────────────────────────────────
             if self.game_mode == "PvE":
-                lbl_dh = self.graphics.font_ui.render("Độ Khó:", True, COLOR_TEXT_MUTED)
+                lbl_dh = self.graphics.font_ui.render(T["label_diff"], True, COLOR_TEXT_MUTED)
                 self.screen.blit(lbl_dh, lbl_dh.get_rect(midleft=(PX, 164)))
                 # EASY (68px)  MEDIUM (82px)  HARD (72px)  – with 6px gaps
                 diff_rects = [
@@ -1279,7 +1433,7 @@ class PygameApp:
                 is_hc = conn_rect.collidepoint(mx, my)
                 pygame.draw.rect(self.screen, (50, 100, 70) if is_hc else (40, 85, 58), conn_rect, border_radius=5)
                 pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hc else (60, 140, 90), conn_rect, 1, border_radius=5)
-                lbl_conn = self.graphics.font_ui.render("🔌  KẾT NỐI SERVER", True, COLOR_TEXT_LIGHT)
+                lbl_conn = self.graphics.font_ui.render(T["btn_connect"], True, COLOR_TEXT_LIGHT)
                 self.screen.blit(lbl_conn, lbl_conn.get_rect(center=conn_rect.center))
 
                 # Room code input (PX, 245, 170, 30)
@@ -1287,7 +1441,7 @@ class PygameApp:
                 inp_rect = pygame.Rect(PX, 245, 170, 30)
                 pygame.draw.rect(self.screen, inp_col, inp_rect, border_radius=4)
                 pygame.draw.rect(self.screen, COLOR_GOLD if self.active_input == "room" else COLOR_TEXT_MUTED, inp_rect, 1, border_radius=4)
-                room_txt = self.input_room_id if self.input_room_id else "MÃ PHÒNG"
+                room_txt = self.input_room_id if self.input_room_id else T["placeholder_room"]
                 lbl_ri = self.graphics.font_ui.render(room_txt, True, COLOR_TEXT_LIGHT if self.input_room_id else COLOR_TEXT_MUTED)
                 self.screen.blit(lbl_ri, (PX + 8, 251))
 
@@ -1296,7 +1450,7 @@ class PygameApp:
                 is_hcr = cre_rect.collidepoint(mx, my)
                 pygame.draw.rect(self.screen, (90, 65, 38) if is_hcr else (75, 54, 30), cre_rect, border_radius=4)
                 pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hcr else COLOR_GOLD, cre_rect, 1, border_radius=4)
-                lbl_cre = self.graphics.font_ui.render("TẠO PHÒNG", True, COLOR_TEXT_LIGHT)
+                lbl_cre = self.graphics.font_ui.render(T["btn_create_room"], True, COLOR_TEXT_LIGHT)
                 self.screen.blit(lbl_cre, lbl_cre.get_rect(center=cre_rect.center))
 
                 # Join Room button (PX, 283, PW, 30)
@@ -1304,11 +1458,11 @@ class PygameApp:
                 is_hjoin = join_rect.collidepoint(mx, my)
                 pygame.draw.rect(self.screen, (90, 65, 38) if is_hjoin else (75, 54, 30), join_rect, border_radius=4)
                 pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hjoin else COLOR_GOLD, join_rect, 1, border_radius=4)
-                lbl_join = self.graphics.font_ui.render("VÀO PHÒNG THEO MÃ CODE", True, COLOR_TEXT_LIGHT)
+                lbl_join = self.graphics.font_ui.render(T["btn_join_room"], True, COLOR_TEXT_LIGHT)
                 self.screen.blit(lbl_join, lbl_join.get_rect(center=join_rect.center))
 
                 # Chat area
-                lbl_ch = self.graphics.font_ui.render("Kênh Trò Chuyện:", True, COLOR_TEXT_MUTED)
+                lbl_ch = self.graphics.font_ui.render(T["label_chat"], True, COLOR_TEXT_MUTED)
                 self.screen.blit(lbl_ch, (PX, 322))
                 chat_area = pygame.Rect(PX, 344, PW, 290)
                 pygame.draw.rect(self.screen, (22, 20, 18), chat_area, border_radius=6)
@@ -1323,7 +1477,7 @@ class PygameApp:
                 ch_rect = pygame.Rect(PX, 650, PW, 30)
                 pygame.draw.rect(self.screen, ch_col, ch_rect, border_radius=4)
                 pygame.draw.rect(self.screen, COLOR_GOLD if self.active_input == "chat" else COLOR_TEXT_MUTED, ch_rect, 1, border_radius=4)
-                ch_txt = self.input_chat if self.input_chat else "NHẬP TIN NHẮN..."
+                ch_txt = self.input_chat if self.input_chat else T["placeholder_chat"]
                 lbl_chi = self.graphics.font_ui.render(ch_txt, True, COLOR_TEXT_LIGHT if self.input_chat else COLOR_TEXT_MUTED)
                 self.screen.blit(lbl_chi, (PX + 8, 656))
 
@@ -1335,13 +1489,13 @@ class PygameApp:
             is_hu = undo_rect.collidepoint(mx, my)
             pygame.draw.rect(self.screen, (90, 40, 40) if is_hu else (70, 35, 35), undo_rect, border_radius=6)
             pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hu else (140, 60, 60), undo_rect, 1, border_radius=6)
-            lbl_u = self.graphics.font_ui.render("↩  QUAY LẠI", True, COLOR_TEXT_LIGHT)
+            lbl_u = self.graphics.font_ui.render(T["btn_undo"], True, COLOR_TEXT_LIGHT)
             self.screen.blit(lbl_u, lbl_u.get_rect(center=undo_rect.center))
 
             is_hr = reset_rect.collidepoint(mx, my)
             pygame.draw.rect(self.screen, (95, 58, 30) if is_hr else (78, 48, 25), reset_rect, border_radius=6)
             pygame.draw.rect(self.screen, COLOR_SEL_GLOW if is_hr else COLOR_GOLD, reset_rect, 1, border_radius=6)
-            lbl_r = self.graphics.font_ui.render("🔄  ĐẦU HÀNG / RESET", True, COLOR_TEXT_LIGHT)
+            lbl_r = self.graphics.font_ui.render(T["btn_reset"], True, COLOR_TEXT_LIGHT)
             self.screen.blit(lbl_r, lbl_r.get_rect(center=reset_rect.center))
 
             # ── Status bar (bottom of board area) ───────────────────────
@@ -1350,7 +1504,11 @@ class PygameApp:
             pygame.draw.rect(self.screen, COLOR_BOARD_LINE, sb_rect, 1, border_radius=4)
             lbl_status = self.graphics.font_ui.render(self.status_message, True, COLOR_GOLD)
             self.screen.blit(lbl_status, (BOARD_LEFT, 708))
-            
+
+            # ── Game Over Overlay ────────────────────────────────────────
+            if self.game_state == "finished" and self.winner is not None:
+                self._draw_game_over_overlay()
+
             # Render frame
             pygame.display.flip()
             
@@ -1360,6 +1518,100 @@ class PygameApp:
                     play_sound(80 + random.randint(0, 40), 40, 0.4)
                     
             self.clock.tick(60)
+
+    def _draw_game_over_overlay(self):
+        """Draws a premium translucent Game Over overlay with win/lose result and a rematch button."""
+        # Semi-transparent dark backdrop
+        overlay = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.SRCALPHA)
+        overlay.fill((10, 8, 6, 200))
+        self.screen.blit(overlay, (0, 0))
+
+        # Central panel
+        panel_w, panel_h = 520, 340
+        panel_x = (WINDOW_WIDTH - panel_w) // 2
+        panel_y = (WINDOW_HEIGHT - panel_h) // 2
+        panel_rect = pygame.Rect(panel_x, panel_y, panel_w, panel_h)
+
+        # Determine if local player won or lost
+        player_wins = (self.winner == self.player_color)
+
+        # Panel fill gradient effect (two rects)
+        panel_bg = (28, 60, 35) if player_wins else (65, 20, 20)
+        panel_edge = (60, 160, 80) if player_wins else (180, 50, 50)
+        pygame.draw.rect(self.screen, panel_bg, panel_rect, border_radius=18)
+        pygame.draw.rect(self.screen, panel_edge, panel_rect, 3, border_radius=18)
+
+        # Inner glow line
+        inner = panel_rect.inflate(-16, -16)
+        pygame.draw.rect(self.screen, panel_edge, inner, 1, border_radius=12)
+
+        cx = panel_rect.centerx
+
+        # Big result icon characters
+        T = LANG[self.lang]
+        icon_char = T["win_title"] if player_wins else T["lose_title"]
+        icon_color = (80, 230, 110) if player_wins else (230, 80, 80)
+        lbl_icon = self.graphics.font_menu_title.render(icon_char, True, icon_color)
+        self.screen.blit(lbl_icon, lbl_icon.get_rect(center=(cx, panel_y + 80)))
+
+        # Subtitle
+        if player_wins:
+            winner_name = T["color_red"] if self.winner == Color.RED else T["color_black"]
+            subtitle = T["win_sub"].format(color=winner_name)
+        else:
+            loser_name = T["color_red"] if self.winner != Color.RED else T["color_black"]
+            subtitle = T["lose_sub"].format(color=loser_name)
+        lbl_sub = self.graphics.font_title.render(subtitle, True, COLOR_TEXT_LIGHT)
+        self.screen.blit(lbl_sub, lbl_sub.get_rect(center=(cx, panel_y + 155)))
+
+        # Winner declaration line
+        winner_label = T["win_label"] if player_wins else T["lose_label"]
+        winner_color = (120, 255, 140) if player_wins else (255, 120, 120)
+        lbl_win = self.graphics.font_title.render(winner_label, True, winner_color)
+        self.screen.blit(lbl_win, lbl_win.get_rect(center=(cx, panel_y + 200)))
+
+        # Rematch button
+        mx, my = pygame.mouse.get_pos()
+        btn_w, btn_h = 260, 52
+        btn_rect = pygame.Rect(cx - btn_w // 2, panel_y + panel_h - 80, btn_w, btn_h)
+        is_hov = btn_rect.collidepoint(mx, my)
+
+        btn_bg  = (90, 130, 60) if (player_wins and is_hov) else \
+                  (70, 105, 45) if player_wins else \
+                  ((130, 60, 40) if is_hov else (105, 45, 30))
+        btn_brd = COLOR_SEL_GLOW if is_hov else (COLOR_GOLD)
+        pygame.draw.rect(self.screen, btn_bg,  btn_rect, border_radius=10)
+        pygame.draw.rect(self.screen, btn_brd, btn_rect, 2 if is_hov else 1, border_radius=10)
+
+        lbl_btn = self.graphics.font_title.render(T["rematch_btn"], True,
+                                                   COLOR_SEL_GLOW if is_hov else COLOR_TEXT_LIGHT)
+        self.screen.blit(lbl_btn, lbl_btn.get_rect(center=btn_rect.center))
+
+        # Store rematch button rect for click detection
+        self._rematch_btn_rect = btn_rect
+
+    def _handle_rematch_click(self, x: int, y: int) -> bool:
+        """Returns True if the rematch button was clicked during game-over state."""
+        if self.game_state != "finished":
+            return False
+        btn = getattr(self, '_rematch_btn_rect', None)
+        if btn and btn.collidepoint(x, y):
+            # Reset game
+            if self.sub_mode == "co_up":
+                self.local_board.setup_co_up()
+                self.shuffle_timer = 60
+            else:
+                self.local_board.setup_classic()
+            self.current_turn = Color.RED
+            self.game_state = "playing"
+            self.winner = None
+            self.move_history.clear()
+            self.selected_pos = None
+            self.ai_thread_active = False
+            self.status_message = LANG[self.lang]["status_new_match"]
+            play_sound(260, 200, 0.6)
+            return True
+        return False
 
 if __name__ == "__main__":
     app = PygameApp()
