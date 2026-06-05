@@ -200,6 +200,7 @@ class PikafishEngine:
                 text=True,
                 bufsize=1,
                 cwd=_ENGINES_DIR,       # NNUE file must be in same dir
+                creationflags=subprocess.CREATE_NO_WINDOW,  # Windows: suppress console popup
             )
         except (OSError, FileNotFoundError) as exc:
             print(f"[Pikafish] Cannot launch binary: {exc}")

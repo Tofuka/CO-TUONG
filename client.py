@@ -10,6 +10,7 @@ from typing import Dict, List, Optional, Tuple
 import pygame
 from models import Board, Piece, PieceType, Color, Position
 from rules import MoveValidator
+import ai as _ai_module  # top-level import so PyInstaller bundles ai.py + pikafish_engine.py
 
 # Initialize Pygame and Mixer
 pygame.init()
@@ -105,7 +106,7 @@ LANG = {
         "btn_undo":         "<<  QUAY LẠI",
         "btn_reset":        "[o]  ĐẦU HÀNG / RESET",
         # Game over
-        "win_title":        "*** THẮNG ***",
+        "win_title":        ">> THẮNG <<",
         "lose_title":       "--- THUA ---",
         "win_label":        "BẠN ĐÃ THẮNG!",
         "lose_label":       "BẠN ĐÃ THUA!",
@@ -649,19 +650,36 @@ class PygameApp:
         """Runs the strong Xiangqi AI in a background thread to prevent Pygame freeze."""
         if self.ai_thread_active or self.game_state != "playing":
             return
-            
+
         self.ai_thread_active = True
-        
+
         def ai_worker():
-            from ai import get_best_move
-            best_move = get_best_move(
-                self.local_board,
-                Color.BLACK,
-                self.validator,
-                difficulty=self.ai_difficulty
-            )
-            pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"move": best_move}))
-            
+            """Background thread: compute AI move and post result event.
+            Always posts the event (even on error) so ai_thread_active is
+            properly cleared and the game never gets stuck.
+            """
+            best_move = None
+            try:
+                best_move = _ai_module.get_best_move(
+                    self.local_board,
+                    Color.BLACK,
+                    self.validator,
+                    difficulty=self.ai_difficulty
+                )
+            except Exception as exc:
+                # Write error to a log file next to the exe so we can diagnose
+                import sys, os, traceback
+                try:
+                    base = os.path.dirname(sys.executable) if getattr(sys, 'frozen', False) else os.path.dirname(os.path.abspath(__file__))
+                    with open(os.path.join(base, 'ai_error.log'), 'a', encoding='utf-8') as f:
+                        f.write(f'AI Error: {exc}\n')
+                        traceback.print_exc(file=f)
+                except Exception:
+                    pass
+            finally:
+                # Always post the event so the game isn't stuck
+                pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"move": best_move}))
+
         threading.Thread(target=ai_worker, daemon=True).start()
 
 
