@@ -302,20 +302,137 @@ class MoveValidator:
         return False
 
     def get_legal_moves(self, board: Board, color: Color) -> List[Tuple[Position, Position]]:
-        """Returns a list of all legal moves for a given player color as (from_pos, to_pos)."""
-        legal_moves = []
-        
-        # Collect all pieces of the given color
+        """Returns a list of all legal moves for a given player color.
+        Highly optimized: Generates pseudo-legal moves directly based on piece mechanics,
+        then verifies them with in-place board modification (no slow cloning).
+        """
+        pseudo_moves = []
         friendly_pieces = [(pos, p) for pos, p in board.grid.items() if p.color == color]
         
-        # Brute-force scan over the board
+        # 1. Generate pseudo-legal moves without check-testing
         for from_pos, piece in friendly_pieces:
-            for c in range(9):
-                for r in range(10):
-                    to_pos = Position(c, r)
-                    if self.is_valid_move(board, from_pos, to_pos, color):
-                        legal_moves.append((from_pos, to_pos))
+            pt = piece.get_current_type()
+            
+            if pt == PieceType.GENERAL:
+                for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
+                    tp = Position(from_pos.col + dc, from_pos.row + dr)
+                    if tp.is_valid() and tp.is_in_palace(color):
+                        dest_pc = board.grid.get(tp)
+                        if dest_pc is None or dest_pc.color != color:
+                            pseudo_moves.append((from_pos, tp))
+                            
+            elif pt == PieceType.ADVISOR:
+                for dr, dc in [(1,1), (1,-1), (-1,1), (-1,-1)]:
+                    tp = Position(from_pos.col + dc, from_pos.row + dr)
+                    if tp.is_valid():
+                        is_co_up = getattr(board, "is_co_up", False)
+                        if (not is_co_up or piece.is_face_down) and not tp.is_in_palace(color):
+                            continue
+                        dest_pc = board.grid.get(tp)
+                        if dest_pc is None or dest_pc.color != color:
+                            pseudo_moves.append((from_pos, tp))
+                            
+            elif pt == PieceType.ELEPHANT:
+                for dr, dc in [(2,2), (2,-2), (-2,2), (-2,-2)]:
+                    tp = Position(from_pos.col + dc, from_pos.row + dr)
+                    if tp.is_valid():
+                        is_co_up = getattr(board, "is_co_up", False)
+                        if (not is_co_up or piece.is_face_down):
+                            if color == Color.RED and tp.row > 4: continue
+                            if color == Color.BLACK and tp.row < 5: continue
+                        # Eye check
+                        eye = Position(from_pos.col + dc//2, from_pos.row + dr//2)
+                        if board.grid.get(eye) is None:
+                            dest_pc = board.grid.get(tp)
+                            if dest_pc is None or dest_pc.color != color:
+                                pseudo_moves.append((from_pos, tp))
+                                
+            elif pt == PieceType.HORSE:
+                for dr, dc in [(2,1), (2,-1), (-2,1), (-2,-1), (1,2), (1,-2), (-1,2), (-1,-2)]:
+                    tp = Position(from_pos.col + dc, from_pos.row + dr)
+                    if tp.is_valid():
+                        leg = Position(from_pos.col + dc//2, from_pos.row) if abs(dc) == 2 else Position(from_pos.col, from_pos.row + dr//2)
+                        if board.grid.get(leg) is None:
+                            dest_pc = board.grid.get(tp)
+                            if dest_pc is None or dest_pc.color != color:
+                                pseudo_moves.append((from_pos, tp))
+                                
+            elif pt == PieceType.CHARIOT:
+                for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
+                    c, r = from_pos.col + dc, from_pos.row + dr
+                    while 0 <= c <= 8 and 0 <= r <= 9:
+                        tp = Position(c, r)
+                        dest_pc = board.grid.get(tp)
+                        if dest_pc is None:
+                            pseudo_moves.append((from_pos, tp))
+                        else:
+                            if dest_pc.color != color:
+                                pseudo_moves.append((from_pos, tp))
+                            break
+                        c += dc; r += dr
                         
+            elif pt == PieceType.CANNON:
+                for dr, dc in [(1,0), (-1,0), (0,1), (0,-1)]:
+                    c, r = from_pos.col + dc, from_pos.row + dr
+                    hit_screen = False
+                    while 0 <= c <= 8 and 0 <= r <= 9:
+                        tp = Position(c, r)
+                        dest_pc = board.grid.get(tp)
+                        if not hit_screen:
+                            if dest_pc is None:
+                                pseudo_moves.append((from_pos, tp))
+                            else:
+                                hit_screen = True
+                        else:
+                            if dest_pc is not None:
+                                if dest_pc.color != color:
+                                    pseudo_moves.append((from_pos, tp))
+                                break
+                        c += dc; r += dr
+                        
+            elif pt == PieceType.SOLDIER:
+                dirs = []
+                if color == Color.RED:
+                    dirs.append((1, 0)) # Forward
+                    if from_pos.row >= 5:
+                        dirs.extend([(0, 1), (0, -1)])
+                else:
+                    dirs.append((-1, 0))
+                    if from_pos.row <= 4:
+                        dirs.extend([(0, 1), (0, -1)])
+                        
+                for dr, dc in dirs:
+                    tp = Position(from_pos.col + dc, from_pos.row + dr)
+                    if tp.is_valid():
+                        dest_pc = board.grid.get(tp)
+                        if dest_pc is None or dest_pc.color != color:
+                            pseudo_moves.append((from_pos, tp))
+
+        # 2. Filter out moves that leave the king in check (in-place modification for speed)
+        legal_moves = []
+        for fp, tp in pseudo_moves:
+            # Make move
+            piece = board.grid.pop(fp)
+            captured = board.grid.pop(tp, None)
+            board.grid[tp] = piece
+            
+            was_face_down = piece.is_face_down
+            if was_face_down:
+                piece.is_face_down = False
+                
+            in_check = self.is_in_check(board, color)
+            
+            # Undo move
+            if was_face_down:
+                piece.is_face_down = True
+            board.grid.pop(tp)
+            board.grid[fp] = piece
+            if captured:
+                board.grid[tp] = captured
+                
+            if not in_check:
+                legal_moves.append((fp, tp))
+                
         return legal_moves
 
     def is_checkmate(self, board: Board, color: Color) -> bool:

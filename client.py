@@ -646,30 +646,24 @@ class PygameApp:
         return None
 
     def trigger_local_ai_move(self):
-        """Runs the Minimax AI in a background thread to prevent Pygame freeze."""
+        """Runs the strong Xiangqi AI in a background thread to prevent Pygame freeze."""
         if self.ai_thread_active or self.game_state != "playing":
             return
             
         self.ai_thread_active = True
         
         def ai_worker():
-            from ai import minimax
-            depth = 2
-            if self.ai_difficulty == "easy":
-                depth = 1
-            elif self.ai_difficulty == "hard":
-                depth = 3
-                
-            # Compute best move
-            _, best_move = minimax(
-                self.local_board, depth, -float('inf'), float('inf'), 
-                True, Color.BLACK, self.validator
+            from ai import get_best_move
+            best_move = get_best_move(
+                self.local_board,
+                Color.BLACK,
+                self.validator,
+                difficulty=self.ai_difficulty
             )
-            
-            # Post back to Pygame loop via event queue
             pygame.event.post(pygame.event.Event(pygame.USEREVENT + 1, {"move": best_move}))
             
         threading.Thread(target=ai_worker, daemon=True).start()
+
 
     def process_server_events(self):
         """Consumes events from thread-safe background WebSocket thread."""
@@ -1426,6 +1420,21 @@ class PygameApp:
                 for dname, drect in diff_rects:
                     draw_small_btn(drect, dname.upper(), self.ai_difficulty == dname)
 
+                # Engine status badge
+                try:
+                    from pikafish_engine import is_pikafish_available
+                    _pf_on = is_pikafish_available()
+                except Exception:
+                    _pf_on = False
+                badge_col = (40, 160, 80) if _pf_on else (100, 80, 40)
+                badge_txt = "PIKAFISH" if _pf_on else "Custom AI"
+                badge_rect = pygame.Rect(PX, 184, PW, 20)
+                pygame.draw.rect(self.screen, badge_col, badge_rect, border_radius=4)
+                lbl_badge = self.graphics.font_ui.render(
+                    f"Engine: {badge_txt}", True, (220, 255, 220) if _pf_on else (200, 180, 120)
+                )
+                self.screen.blit(lbl_badge, lbl_badge.get_rect(center=badge_rect.center))
+
             # ── PvP Server Controls ──────────────────────────────────────
             elif self.game_mode == "PvP":
                 # Connect button (PX, 198, PW, 30)
@@ -1615,4 +1624,11 @@ class PygameApp:
 
 if __name__ == "__main__":
     app = PygameApp()
-    app.run()
+    try:
+        app.run()
+    finally:
+        try:
+            from pikafish_engine import shutdown_pikafish
+            shutdown_pikafish()
+        except Exception:
+            pass
