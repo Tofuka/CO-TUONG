@@ -11,7 +11,11 @@ from models import Board, Color, PieceType, Position
 # ---------------------------------------------------------------------------
 # Engine binary discovery
 # ---------------------------------------------------------------------------
-_DIR = os.path.dirname(os.path.abspath(__file__))
+if getattr(sys, 'frozen', False):
+    _DIR = os.path.dirname(sys.executable)
+else:
+    _DIR = os.path.dirname(os.path.abspath(__file__))
+
 _ENGINES_DIR = os.path.join(_DIR, "engines")
 
 _CANDIDATES = [
