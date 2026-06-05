@@ -429,7 +429,7 @@ class GraphicsEngine:
             
         self.screen.blit(self.wood_surface, (rect.left, rect.top))
 
-    def draw_board(self, board_rect: pygame.Rect):
+    def draw_board(self, board_rect: pygame.Rect, flip: bool = False):
         """Draws a premium wooden Xiangqi board layout."""
         self.draw_wood_background(board_rect)
         
@@ -483,11 +483,15 @@ class GraphicsEngine:
         river_cy = river_y + GRID_CELL_SIZE // 2      # y-center of river strip
         # Left half: "漢 楚"
         txt_left  = self.font_river.render("漢 楚", True, COLOR_BOARD_LINE)
-        rect_left = txt_left.get_rect(center=(BOARD_LEFT + 2 * GRID_CELL_SIZE, river_cy))
+        if flip:
+            txt_left = pygame.transform.rotate(txt_left, 180)
+        rect_left = txt_left.get_rect(center=(BOARD_LEFT + (6 if flip else 2) * GRID_CELL_SIZE, river_cy))
         self.screen.blit(txt_left, rect_left)
         # Right half: "爭 雄"
         txt_right  = self.font_river.render("爭 雄", True, COLOR_BOARD_LINE)
-        rect_right = txt_right.get_rect(center=(BOARD_LEFT + 6 * GRID_CELL_SIZE, river_cy))
+        if flip:
+            txt_right = pygame.transform.rotate(txt_right, 180)
+        rect_right = txt_right.get_rect(center=(BOARD_LEFT + (2 if flip else 6) * GRID_CELL_SIZE, river_cy))
         self.screen.blit(txt_right, rect_right)
 
     def draw_3d_piece(self, x: int, y: int, color_val: str, piece_type: str, is_face_down: bool, is_selected: bool, is_checked: bool):
@@ -606,7 +610,7 @@ class PygameApp:
         # Selection / Interaction
         self.selected_pos: Optional[Position] = None
         self.current_turn = Color.RED
-        self.player_color = Color.RED     # RED in local PvE, determined in server PvP
+        self.player_color = random.choice([Color.RED, Color.BLACK])
         self.game_state = "playing"       # "playing", "finished"
         self.winner = None
         
@@ -628,10 +632,13 @@ class PygameApp:
         self.move_history: List[dict] = []  # supports local undo
         self.shuffle_timer = 0
 
-    def grid_to_pixel(self, col: int, row: int) -> Tuple[int, int]:
+    def grid_to_pixel(self, col: float, row: float) -> Tuple[int, int]:
         """Converts board index to screen pixels."""
-        x = BOARD_LEFT + col * GRID_CELL_SIZE
-        y = BOARD_TOP + (9 - row) * GRID_CELL_SIZE  # In Xiangqi coordinates: row 0 is at bottom!
+        if getattr(self, 'player_color', Color.RED) == Color.BLACK:
+            col = 8 - col
+            row = 9 - row
+        x = int(BOARD_LEFT + col * GRID_CELL_SIZE)
+        y = int(BOARD_TOP + (9 - row) * GRID_CELL_SIZE)  # In Xiangqi coordinates: row 0 is at bottom!
         return x, y
 
     def pixel_to_grid(self, x: int, y: int) -> Optional[Position]:
@@ -641,6 +648,9 @@ class PygameApp:
         """
         col = round((x - BOARD_LEFT) / GRID_CELL_SIZE)
         row = 9 - round((y - BOARD_TOP) / GRID_CELL_SIZE)
+        if getattr(self, 'player_color', Color.RED) == Color.BLACK:
+            col = 8 - col
+            row = 9 - row
         pos = Position(col, row)
         if pos.is_valid():
             return pos
@@ -660,9 +670,10 @@ class PygameApp:
             """
             best_move = None
             try:
+                ai_color = Color.BLACK if self.player_color == Color.RED else Color.RED
                 best_move = _ai_module.get_best_move(
                     self.local_board,
-                    Color.BLACK,
+                    ai_color,
                     self.validator,
                     difficulty=self.ai_difficulty
                 )
@@ -816,9 +827,13 @@ class PygameApp:
                 self.current_turn = Color.RED
                 self.game_state = "playing"
                 self.move_history.clear()
-                self.status_message = T["status_ready"]
+                self.player_color = random.choice([Color.RED, Color.BLACK])
+                color_name = T["color_red"] if self.player_color == Color.RED else T["color_black"]
+                self.status_message = f"Sẵn sàng! (Bạn: {color_name})" if self.lang == "vi" else f"Game Ready! (You: {color_name})"
                 self.selected_pos = None
                 play_sound(180, 150, 0.7)
+                if self.player_color == Color.BLACK:
+                    self.trigger_local_ai_move()
             # 2. PvP: Rect(310, 355, 380, 54)
             elif 310 <= x <= 690 and 355 <= y <= 409:
                 self.current_screen = "game"
@@ -933,13 +948,14 @@ class PygameApp:
                             self.winner = Color.RED
                             self.status_message = "Stalemate! Red Wins!"
                         elif self.validator.is_in_check(self.local_board, opp_color):
-                            self.status_message = "WARNING: BLACK is Checked!"
+                            color_str = "BLACK" if opp_color == Color.BLACK else "RED"
+                            self.status_message = f"WARNING: {color_str} is Checked!"
                             play_sound(300, 120, 0.5)
                             time.sleep(0.12)
                             play_sound(300, 120, 0.5)
                             
                         # Trigger Local AI computation
-                        if self.game_state == "playing" and self.current_turn == Color.BLACK:
+                        if self.game_state == "playing" and self.current_turn != self.player_color:
                             self.trigger_local_ai_move()
                     else:
                         self.selected_pos = None
@@ -967,8 +983,12 @@ class PygameApp:
                 self.local_board.setup_classic()
                 self.current_turn = Color.RED
                 self.game_state = "playing"
-                self.status_message = "Local Game Ready (You: RED)"
+                self.player_color = random.choice([Color.RED, Color.BLACK])
+                color_name = LANG[self.lang]["color_red"] if self.player_color == Color.RED else LANG[self.lang]["color_black"]
+                self.status_message = f"Sẵn sàng! (Bạn: {color_name})" if self.lang == "vi" else f"Game Ready! (You: {color_name})"
                 self.selected_pos = None
+                if self.player_color == Color.BLACK:
+                    self.trigger_local_ai_move()
             elif PX + 160 <= x <= PX + 312 and 52 <= y <= 88:
                 if self.ai_thread_active:
                     return
@@ -1046,7 +1066,7 @@ class PygameApp:
                                 self.local_board.add_piece(frm, moved)
                             if last["captured"]:
                                 self.local_board.add_piece(to, last["captured"])
-                    self.current_turn = Color.RED
+                    self.current_turn = self.player_color
                     self.game_state = "playing"
                     self.status_message = "Undo complete."
                 else:
@@ -1065,7 +1085,11 @@ class PygameApp:
                     self.current_turn = Color.RED
                     self.game_state = "playing"
                     self.move_history.clear()
-                    self.status_message = "Game reset."
+                    self.player_color = random.choice([Color.RED, Color.BLACK])
+                    color_name = LANG[self.lang]["color_red"] if self.player_color == Color.RED else LANG[self.lang]["color_black"]
+                    self.status_message = f"Đã đặt lại ván cờ. (Bạn: {color_name})" if self.lang == "vi" else f"Game reset. (You: {color_name})"
+                    if self.player_color == Color.BLACK:
+                        self.trigger_local_ai_move()
                 else:
                     pass
 
@@ -1231,7 +1255,8 @@ class PygameApp:
                     if best_move and self.game_state == "playing":
                         from_pos, to_pos = best_move
                         # Perform AI move
-                        res = self.validator.make_move(self.local_board, from_pos, to_pos, Color.BLACK)
+                        ai_color = Color.BLACK if self.player_color == Color.RED else Color.RED
+                        res = self.validator.make_move(self.local_board, from_pos, to_pos, ai_color)
                         if res is not None:
                             captured, was_revealed = res
                             self.move_history.append({
@@ -1260,7 +1285,7 @@ class PygameApp:
                             play_sound(180, 150, 0.7)
                             
                             # Switch back to player
-                            self.current_turn = Color.RED
+                            self.current_turn = self.player_color
                             self.status_message = "Your Turn."
                             
                             # End states checks
@@ -1274,15 +1299,16 @@ class PygameApp:
                                 self.winner = Color.BLACK
                                 self.status_message = "Stalemate! AI Wins!"
                             elif self.validator.is_in_check(self.local_board, opp_color):
-                                self.status_message = "WARNING: Red General Checked!"
+                                color_str = "Red" if opp_color == Color.RED else "Black"
+                                self.status_message = f"WARNING: {color_str} General Checked!"
                                 play_sound(300, 120, 0.5)
                                 time.sleep(0.12)
                                 play_sound(300, 120, 0.5)
                         else:
-                            self.current_turn = Color.RED
+                            self.current_turn = self.player_color
                             self.status_message = "AI calculated illegal move."
                     else:
-                        self.current_turn = Color.RED
+                        self.current_turn = self.player_color
                         self.status_message = "AI resigned or cannot move."
 
             # 3. Drawing Phase
@@ -1302,7 +1328,7 @@ class PygameApp:
             
             # Board area size: 612 x 676
             board_rect = pygame.Rect(BOARD_LEFT - 20, BOARD_TOP - 20, 8 * GRID_CELL_SIZE + 40, 9 * GRID_CELL_SIZE + 40)
-            self.graphics.draw_board(board_rect)
+            self.graphics.draw_board(board_rect, flip=(self.player_color == Color.BLACK))
             
             # Draw valid move suggestions for selected piece
             if self.selected_pos is not None:
@@ -1339,8 +1365,7 @@ class PygameApp:
                 if getattr(self, 'shuffle_timer', 0) > 0 and piece.is_face_down:
                     center_col = 4
                     center_row = 2.5 if piece.color == Color.RED else 7.5
-                    cx = BOARD_LEFT + center_col * GRID_CELL_SIZE
-                    cy = BOARD_TOP + int(center_row * GRID_CELL_SIZE)
+                    cx, cy = self.grid_to_pixel(center_col, center_row)
                     
                     if self.shuffle_timer > 40: # slide to center
                         t = (60 - self.shuffle_timer) / 20.0
@@ -1635,7 +1660,14 @@ class PygameApp:
             self.move_history.clear()
             self.selected_pos = None
             self.ai_thread_active = False
-            self.status_message = LANG[self.lang]["status_new_match"]
+            if self.game_mode == "PvE":
+                self.player_color = random.choice([Color.RED, Color.BLACK])
+                color_name = LANG[self.lang]["color_red"] if self.player_color == Color.RED else LANG[self.lang]["color_black"]
+                self.status_message = f"Ván mới bắt đầu! (Bạn: {color_name})" if self.lang == "vi" else f"New match started! (You: {color_name})"
+                if self.player_color == Color.BLACK:
+                    self.trigger_local_ai_move()
+            else:
+                self.status_message = LANG[self.lang]["status_new_match"]
             play_sound(260, 200, 0.6)
             return True
         return False
