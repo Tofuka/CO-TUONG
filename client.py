@@ -605,6 +605,7 @@ class PygameApp:
         self.game_mode = "PvE"            # "PvE" (Local AI) or "PvP" (Online Server)
         self.sub_mode = "classic"         # "classic" or "co_up"
         self.ai_difficulty = "medium"     # "easy", "medium", "hard"
+        self.ai_engine = "auto"           # "auto", "pikafish", "custom"
         self.ai_thread_active = False     # Guard for local AI calls
         
         # Selection / Interaction
@@ -675,7 +676,8 @@ class PygameApp:
                     self.local_board,
                     ai_color,
                     self.validator,
-                    difficulty=self.ai_difficulty
+                    difficulty=self.ai_difficulty,
+                    engine=self.ai_engine
                 )
             except Exception as exc:
                 # Write error to a log file next to the exe so we can diagnose
@@ -1022,6 +1024,12 @@ class PygameApp:
                     self.ai_difficulty = "medium"
                 elif PX + 242 <= x <= PX + 314 and 150 <= y <= 178:
                     self.ai_difficulty = "hard"
+
+                # AI Engine Selection (PX+80, 184, 110, 24) & (PX+198, 184, 114, 24)
+                if PX + 80 <= x <= PX + 190 and 184 <= y <= 208:
+                    self.ai_engine = "auto"
+                elif PX + 198 <= x <= PX + 312 and 184 <= y <= 208:
+                    self.ai_engine = "custom"
 
             # --- Server lobby commands (PvP only) ---
             if self.game_mode == "PvP":
@@ -1463,20 +1471,21 @@ class PygameApp:
                 for dname, drect in diff_rects:
                     draw_small_btn(drect, dname.upper(), self.ai_difficulty == dname)
 
-                # Engine status badge
+                # ── AI Engine Switch ────────────────────────────────────────
+                lbl_en = self.graphics.font_ui.render("AI Engine:", True, COLOR_TEXT_MUTED)
+                self.screen.blit(lbl_en, lbl_en.get_rect(midleft=(PX, 196)))
+                
+                pf_rect = pygame.Rect(PX + 80, 184, 110, 24)
+                cs_rect = pygame.Rect(PX + 198, 184, 114, 24)
+                
                 try:
                     from pikafish_engine import is_pikafish_available
                     _pf_on = is_pikafish_available()
                 except Exception:
                     _pf_on = False
-                badge_col = (40, 160, 80) if _pf_on else (100, 80, 40)
-                badge_txt = "PIKAFISH" if _pf_on else "Custom AI"
-                badge_rect = pygame.Rect(PX, 184, PW, 20)
-                pygame.draw.rect(self.screen, badge_col, badge_rect, border_radius=4)
-                lbl_badge = self.graphics.font_ui.render(
-                    f"Engine: {badge_txt}", True, (220, 255, 220) if _pf_on else (200, 180, 120)
-                )
-                self.screen.blit(lbl_badge, lbl_badge.get_rect(center=badge_rect.center))
+                    
+                draw_small_btn(pf_rect, "Pikafish" if _pf_on else "Pikafish (N/A)", self.ai_engine in ("auto", "pikafish"))
+                draw_small_btn(cs_rect, "Custom AI", self.ai_engine == "custom")
 
             # ── PvP Server Controls ──────────────────────────────────────
             elif self.game_mode == "PvP":

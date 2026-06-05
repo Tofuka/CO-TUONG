@@ -503,20 +503,22 @@ def get_best_move(
     color: Color,
     validator: MoveValidator,
     difficulty: str = "medium",
+    engine: str = "auto"
 ) -> Optional[Tuple[Position, Position]]:
     """
     Primary PvE entry point.
     Uses Pikafish if the binary is present; falls back to the custom engine.
     """
-    # -- 1. Try Pikafish (strongest) -------------------------------------------
-    try:
-        from pikafish_engine import is_pikafish_available, get_pikafish_move
-        if is_pikafish_available():
-            move = get_pikafish_move(board, color, difficulty)
-            if move is not None:
-                return move
-    except Exception as exc:
-        print(f"[AI] Pikafish error ({exc}), falling back to custom engine.")
+    if engine in ("auto", "pikafish"):
+        # -- 1. Try Pikafish (strongest) -------------------------------------------
+        try:
+            from pikafish_engine import is_pikafish_available, get_pikafish_move
+            if is_pikafish_available():
+                move = get_pikafish_move(board, color, difficulty)
+                if move is not None:
+                    return move
+        except Exception as exc:
+            print(f"[AI] Pikafish error ({exc}), falling back to custom engine.")
 
     # -- 2. Fallback: custom iterative-deepening engine -----------------------
     p = DIFFICULTY_PARAMS.get(difficulty, DIFFICULTY_PARAMS["medium"])
