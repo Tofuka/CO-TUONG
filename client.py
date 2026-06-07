@@ -179,7 +179,7 @@ LANG = {
         "lose_title":       "--- YOU LOSE ---",
         "win_label":        "YOU WON!",
         "lose_label":       "YOU LOST!",
-        "win_sub":          "{color} has been checkmated!",
+        "win_sub":          "{color} has checkmated the opponent!",
         "lose_sub":         "{color} has been checkmated!",
         "rematch_btn":      ">> REMATCH <<",
         "color_red":        "RED",
@@ -943,12 +943,12 @@ class PygameApp:
                         opp_color = self.current_turn
                         if self.validator.is_checkmate(self.local_board, opp_color):
                             self.game_state = "finished"
-                            self.winner = Color.RED
-                            self.status_message = "Checkmate! Red Wins!"
+                            self.winner = self.player_color
+                            self.status_message = "Checkmate! You Win!"
                         elif self.validator.is_stalemate(self.local_board, opp_color):
                             self.game_state = "finished"
-                            self.winner = Color.RED
-                            self.status_message = "Stalemate! Red Wins!"
+                            self.winner = self.player_color
+                            self.status_message = "Stalemate! You Win!"
                         elif self.validator.is_in_check(self.local_board, opp_color):
                             color_str = "BLACK" if opp_color == Color.BLACK else "RED"
                             self.status_message = f"WARNING: {color_str} is Checked!"
@@ -1300,11 +1300,11 @@ class PygameApp:
                             opp_color = self.current_turn
                             if self.validator.is_checkmate(self.local_board, opp_color):
                                 self.game_state = "finished"
-                                self.winner = Color.BLACK
+                                self.winner = ai_color
                                 self.status_message = "Checkmate! AI Wins!"
                             elif self.validator.is_stalemate(self.local_board, opp_color):
                                 self.game_state = "finished"
-                                self.winner = Color.BLACK
+                                self.winner = ai_color
                                 self.status_message = "Stalemate! AI Wins!"
                             elif self.validator.is_in_check(self.local_board, opp_color):
                                 color_str = "Red" if opp_color == Color.RED else "Black"
